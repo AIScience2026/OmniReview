@@ -1,0 +1,87 @@
+{
+  "_comment": "桩注册表：尚未编码完整条目的规范。字段：总数与官方来源。使用前先补全为独立 JSON。",
+  "stubs": {
+    "moose": {
+      "name": "Meta-analysis of Observational Studies in Epidemiology (MOOSE)",
+      "item_count": 35,
+      "applies_to": ["meta-analysis-observational"],
+      "source": "https://www.equator-network.org/reporting-guidelines/moose/",
+      "citation": "Stroup DF, et al. JAMA. 2000;283:2008-2012. 注意：2024 年有更新版本（BMJ Global Health 等），投稿前核对最新版。",
+      "status": "stub"
+    },
+    "mars": {
+      "name": "Meta-Analysis Reporting Standards (APA)",
+      "item_count": 53,
+      "applies_to": ["meta-analysis-psychology"],
+      "source": "https://apastyle.apa.org/instructional-aids/abbreviations-basics-guide.pdf",
+      "citation": "Appelbaum M, et al. J Appl Dev Psychol. 2018 (APA MARS).",
+      "status": "stub"
+    },
+    "prisma-nma": {
+      "name": "PRISMA extension for Network Meta-Analyses",
+      "item_count": 28,
+      "applies_to": ["nma"],
+      "source": "https://www.equator-network.org/reporting-guidelines/prisma-nma/",
+      "citation": "Hutton B, et al. Ann Intern Med. 2015;162:777-784.",
+      "status": "stub"
+    },
+    "prisma-dta": {
+      "name": "PRISMA extension for Diagnostic Test Accuracy studies",
+      "item_count": 30,
+      "applies_to": ["dta"],
+      "source": "https://www.equator-network.org/reporting-guidelines/prisma-dta/",
+      "citation": "McInnes MDF, et al. PLoS Med. 2018;15(11):e1002665.",
+      "status": "stub"
+    },
+    "amstar-2": {
+      "name": "AMSTAR 2 (assessment of systematic reviews)",
+      "item_count": 16,
+      "applies_to": ["umbrella-supplement"],
+      "source": "https://amstar.ca/Amster_Version_Checklist.php",
+      "citation": "Shea BJ, et al. BMJ. 2017;358:j4008. 7 个 critical domains。",
+      "status": "stub"
+    },
+    "robis": {
+      "name": "ROBIS (risk of bias in systematic reviews)",
+      "applies_to": ["umbrella-supplement"],
+      "source": "https://www.bristol.ac.uk/population-health-sciences/projects/robis/",
+      "citation": "Whiting P, et al. J Clin Epidemiol. 2016.",
+      "status": "stub"
+    },
+    "rameses": {
+      "name": "RAMESES publication standards (realist & meta-narrative reviews)",
+      "item_count": 19,
+      "applies_to": ["realist", "meta-narrative"],
+      "source": "https://www.ramesesproject.org",
+      "citation": "Wong G, et al. BMC Med. 2013;11:20 (realist) / 11:21 (meta-narrative); 质量标准: HS&DR 2014;2(30).",
+      "status": "stub"
+    },
+    "emerge": {
+      "name": "eMERGe reporting guidance for meta-ethnography",
+      "item_count": 19,
+      "applies_to": ["meta-ethnography"],
+      "source": "https://emergeproject.org",
+      "citation": "France EF, et al. BMC Med Res Methodol. 2019;19:45.",
+      "status": "stub"
+    },
+    "mmat": {
+      "name": "Mixed Methods Appraisal Tool (MMAT), version 2018",
+      "applies_to": ["mixed-methods-supplement"],
+      "source": "http://mixedmethodsappraisaltoolpublic.pbworks.com",
+      "citation": "Hong QN, et al. 2018. 每类设计 5 条目（定性/定量随机/非随机/定量描述/混合）。",
+      "status": "stub"
+    },
+    "grade-cerqual": {
+      "name": "GRADE-CERQual (confidence in evidence from reviews of qualitative research)",
+      "applies_to": ["qes-supplement"],
+      "source": "https://www.cerqual.org",
+      "citation": "Lewin S, et al. Implement Sci. 2018;13(Suppl 1).",
+      "status": "stub"
+    }
+  },
+  "adapted_conventions": {
+    "rapid-adapted": "适配版 PRISMA 2020 + 省略项披露表（每省略一步，说明理由与风险）。依据 Cochrane RRMG：Garritty et al. J Clin Epidemiol. 2020;128:1-11.",
+    "narrative-adapted": "SANRA 适配（见 sanra.json），输出时必须标注 adapted。",
+    "mixed-methods-adapted": "PRISMA 2020 主体适配 + MMAT 子报告。"
+  }
+}

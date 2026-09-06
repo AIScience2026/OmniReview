@@ -1,0 +1,18 @@
+{
+  "guideline": "sanra",
+  "name": "Scale for the Assessment of Narrative Review Articles (SANRA)",
+  "applies_to": ["narrative", "integrative-adapted", "state-of-the-art-adapted", "systematic-search-and-review-adapted"],
+  "source": "https://doi.org/10.1186/s41073-019-0064-8",
+  "citation": "Baethge C, Goldman S, Munk I. SANRA - a scale for the quality assessment of narrative review articles. Res Integr Peer Rev. 2019;4:5.",
+  "license": "Open access (Springer, Res Integr Peer Rev)",
+  "condensed": false,
+  "scoring": "每条目 0/1/2 分，总分 0-12；≤4 为极差；本工作流目标 ≥10。adapted 版本使用时须显式标注。",
+  "items": [
+    {"id": "1", "label": "对读者的重要性论证", "requirement": "2=明确论证文章对读者的重要性（临床问题、未回答的问题、证据空白）；1=仅提及未论证；0=未论证。", "optional": false},
+    {"id": "2", "label": "具体目标或问题的陈述", "requirement": "2=给出一个及以上具体目标/问题；1=目标笼统、不具体；0=无目标。", "optional": false},
+    {"id": "3", "label": "文献检索的描述", "requirement": "2=详细描述检索（含检索词与纳入标准）；1=简要描述；0=未呈现检索策略。", "optional": false},
+    {"id": "4", "label": "引用支撑", "requirement": "2=关键论断全部或几乎全部有引用支撑；1=关键论断引用不一致；0=关键论断无引用。", "optional": false},
+    {"id": "5", "label": "科学推理", "requirement": "2=适当证据普遍在场（如引证本领域 RCT 等恰当证据层级）；1=适当证据被选择性引入；0=论点缺乏适当论证。", "optional": false},
+    {"id": "6", "label": "数据的恰当呈现", "requirement": "2=相关结局数据普遍以恰当方式呈现（绝对/相对、效应量与置信区间）；1=常未以恰当方式呈现；0=呈现不充分。", "optional": false}
+  ]
+}

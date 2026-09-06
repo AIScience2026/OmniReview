@@ -1,0 +1,33 @@
+{
+  "guideline": "prisma-scr",
+  "name": "PRISMA extension for Scoping Reviews (PRISMA-ScR) checklist",
+  "applies_to": ["scoping"],
+  "source": "https://www.equator-network.org/reporting-guidelines/prisma-scr/",
+  "citation": "Tricco AC, Lillie E, Zarin W, et al. PRISMA Extension for Scoping Reviews (PRISMA-ScR): Checklist and Explanation. Ann Intern Med. 2018;169:467-473.",
+  "license": "CC BY 4.0 (PRISMA statement materials)",
+  "condensed": false,
+  "items": [
+    {"id": "1", "label": "Title", "requirement": "标题标识本报告为范围综述（scoping review）。", "optional": false},
+    {"id": "2", "label": "Structured summary", "requirement": "结构化摘要：目的、范围与纳入来源、提取方法、数据汇总、结论。", "optional": false},
+    {"id": "3", "label": "Rationale", "requirement": "在既有文献背景下说明做本范围综述的理由。", "optional": false},
+    {"id": "4", "label": "Objectives", "requirement": "明确陈述目的，常带 PCC（人群-概念-情境）限定。", "optional": false},
+    {"id": "5", "label": "Protocol and registration", "requirement": "是否预先制定方案及注册位置（如有）；注明最终报告对方案的偏离及更正。", "optional": false},
+    {"id": "6", "label": "Eligibility criteria", "requirement": "作为纳入标准的来源特征（如年份、语言、类型）及理由；要求的信息特征（PCC 各维）及理由。", "optional": false},
+    {"id": "7", "label": "Information sources", "requirement": "全部信息来源（数据库、网站、机构、专家等）及最近检索日期；如涉及利益相关者信息，说明获取途径。", "optional": false},
+    {"id": "8", "label": "Search", "requirement": "给出至少一个数据库的完整检索式；说明对检索的限制（如时间范围、语种）。", "optional": false},
+    {"id": "9", "label": "Selection of sources of evidence", "requirement": "来源筛选过程（含是否多人独立、一致性处理）。", "optional": false},
+    {"id": "10", "label": "Data charting process", "requirement": "数据提取表使用方法、是否独立提取、提取表的迭代修订过程与修订内容。", "optional": false},
+    {"id": "11", "label": "Data items", "requirement": "定义全部提取变量；说明任何对变量取值的假设与简化。", "optional": false},
+    {"id": "12", "label": "Critical appraisal (if done)", "requirement": "如做了来源证据的质量评价，描述方法及其与结论的关系。", "optional": true},
+    {"id": "13", "label": "Synthesis of results", "requirement": "数据的处理与汇总方法（图表化/叙述/描述性统计）。", "optional": false},
+    {"id": "14", "label": "Selection of sources of evidence", "requirement": "结果：检索/筛选各阶段数量、排除原因（全文级）。", "optional": false},
+    {"id": "15", "label": "Characteristics of sources of evidence", "requirement": "纳入来源的特征（时间分布、地点、类型、研究设计），并引用各来源。", "optional": false},
+    {"id": "16", "label": "Critical appraisal within sources (if done)", "requirement": "如做了质量评价，呈现各来源的评价结果。", "optional": true},
+    {"id": "17", "label": "Results of individual sources of evidence", "requirement": "呈现与目的相关的各来源结果。", "optional": false},
+    {"id": "18", "label": "Synthesis of results", "requirement": "对结果进行汇总与综合（证据地图/主题分组）。", "optional": false},
+    {"id": "19", "label": "Summarization of evidence", "requirement": "总结主要结果（含研究空白识别）。", "optional": false},
+    {"id": "20", "label": "Limitations", "requirement": "披露范围综述结果层面的局限及对结论的影响。", "optional": false},
+    {"id": "21", "label": "Conclusions", "requirement": "结论与研究目的/问题对应，并指向后续研究。", "optional": false},
+    {"id": "22", "label": "Funding", "requirement": "资金来源；资助方在综述中的角色说明。", "optional": false}
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "guideline": "entreq",
+  "name": "Enhancing Transparency in Reporting the Synthesis of Qualitative research (ENTREQ)",
+  "applies_to": ["qes", "meta-ethnography-adapted"],
+  "source": "https://www.equator-network.org/reporting-guidelines/entreq/",
+  "citation": "Tong A, Flemming K, McInnes E, et al. Enhancing transparency in reporting the synthesis of qualitative research: ENTREQ. BMC Med Res Methodol. 2012;12:181.",
+  "license": "CC BY 2.0 (BMC, Open Access)",
+  "condensed": true,
+  "condensed_note": "条目 1-14 为主体完整措辞；条目 15-21（Other 域）为摘要措辞，投稿前必须对照官方 ENTREQ 清单核对原文。",
+  "items": [
+    {"id": "1", "label": "Aim", "requirement": "陈述综合的研究问题/目的。", "optional": false},
+    {"id": "2", "label": "Synthesis philosophy", "requirement": "说明综合的哲学立场（如解释主义、批判现实主义）。", "optional": false},
+    {"id": "3", "label": "Approach", "requirement": "说明综合方法及其理由（主题综合、元人志等）。", "optional": false},
+    {"id": "4", "label": "Approach to searching", "requirement": "检索来源与检索方法，说明穷尽程度与理由。", "optional": false},
+    {"id": "5", "label": "Inclusion and exclusion criteria", "requirement": "纳入/排除标准及理由。", "optional": false},
+    {"id": "6", "label": "Strategy used to select studies", "requirement": "研究筛选流程（几轮、独立筛选、分歧解决）。", "optional": false},
+    {"id": "7", "label": "Study characteristics framework", "requirement": "用于描述各研究特征的框架。", "optional": false},
+    {"id": "8", "label": "Data extraction", "requirement": "数据提取与管理方法；提取表的修订。", "optional": false},
+    {"id": "9", "label": "Number of reviewers", "requirement": "参与筛选/提取/评价/综合的人数；不一致的处理。", "optional": false},
+    {"id": "10", "label": "Synthesis of findings", "requirement": "综合发现的方法与过程。", "optional": false},
+    {"id": "11", "label": "Synthesis findings", "requirement": "呈现综合产生的主题/构念/解释。", "optional": false},
+    {"id": "12", "label": "Links between study findings", "requirement": "说明各研究发现之间的关系（如何聚合/回驳/串联）。", "optional": false},
+    {"id": "13", "label": "Table of study findings", "requirement": "给出各研究对每个主题/构念的贡献表。", "optional": false},
+    {"id": "14", "label": "Propositions", "requirement": "由综合发展出的命题/新解释/概念模型。", "optional": false},
+    {"id": "15", "label": "Discussion", "requirement": "讨论综合的优势与局限。", "optional": false},
+    {"id": "16", "label": "Conclusions", "requirement": "结论及对研究/实践/政策的含义。", "optional": false},
+    {"id": "17-21", "label": "Other (funding, registration, conflicts, availability)", "requirement": "官方清单 Other 域剩余条目：资金来源与角色、方案注册、利益冲突、资料可得性等。使用前对照官方清单补全并分列。", "optional": false}
+  ]
+}

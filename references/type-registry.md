@@ -1,0 +1,55 @@
+# 综述类型注册表（Type Registry）
+
+以 Grant & Booth (2009) 14 类型谱系（Health Info Libr J 26:91-108, doi:10.1111/j.1471.1842.2009.00848.x）及后续发展为底。只对**有权威流程框架**的类型提供完整框架卡；无权威流程的类型提供轻量卡并明示局限。每类的报告规范条目库见 `checklist-*.json`。
+
+## 注册表总表
+
+| 类型 | 英文 | 执行框架 | 报告规范 | 审计工具 | 框架卡 |
+| --- | --- | --- | --- | --- | --- |
+| 范围综述 | scoping review | JBI 六阶段 + PCC（Arksey & O'Malley 2005 → Levac 2010 → JBI） | PRISMA-ScR (22条) | PRISMA-ScR 审计 | scoping-jbi.md ✅完整 |
+| 系统综述 | systematic review | Cochrane Handbook / JBI；问题用 PICO | PRISMA 2020 (27条) | PRISMA 2020 审计 | systematic-prisma2020.md ✅完整 |
+| 伞状综述 | umbrella review | JBI Manual（对 SR/MA 的再综述） | PRISMA 2020 | PRISMA 审计 + AMSTAR-2/ROBIS 评纳入 SR | umbrella-jbi.md ✅完整 |
+| 元分析(RCT类) | meta-analysis | Cochrane 定量综合 | PRISMA 2020 | PRISMA 审计 + 效应量一致性检查 | systematic-prisma2020.md（综合章扩展） |
+| 元分析(观察性) | meta-analysis (observational) | — | MOOSE (35条) | MOOSE 审计 | other-types.md 轻量 |
+| 元分析(心理学) | — | — | MARS (APA) | MARS 审计 | other-types.md 轻量 |
+| 网络元分析 | NMA | Cochrane | PRISMA-NMA (Hutton 2015) | PRISMA-NMA 审计 | other-types.md 轻量 |
+| 诊断试验综述 | DTA review | Cochrane DTA | PRISMA-DTA (McInnes 2018) | PRISMA-DTA 审计 | other-types.md 轻量 |
+| 定性证据综合 | QES | JBI QES 章 / Thomas & Harden 主题综合 | ENTREQ (21条) | ENTREQ 审计 + GRADE-CERQual | qes-entreq.md ✅完整 |
+| 元人志 | meta-ethnography | Noblit & Hare 七阶段 | eMERGe (2019) | eMERGe 审计 | other-types.md 轻量 |
+| 现实主义综述 | realist review | Pawson 循环（理论→检索→CMO 配置→精炼） | RAMESES 出版标准 (2013) | RAMESES 质量标准 (2014) | realist-rameses.md ✅完整 |
+| 元叙事综述 | meta-narrative review | Greenhalgh 多传统叙事 | RAMESES 元叙事标准 | RAMESES 质量标准 | realist-rameses.md（附节） |
+| 快速综述 | rapid review | Cochrane RRMG 建议 (Garritty 2020)：缩短但不省略透明度 | PRISMA 2020 适配 + 时间限制披露 | 适配版 PRISMA（标注 adapted） | other-types.md 轻量 |
+| 混合方法综述 | mixed methods review | 定量+定性分别检索与评价 | PRISMA 适配（无专用规范） | PRISMA 审计 + MMAT (Hong 2018) 评纳入研究 | other-types.md 轻量 |
+| 叙述性综述 | narrative / literature review | 无严格规定；结构化叙述 | — | SANRA (6条, 0-2分, 满分12; Baethge 2019) | narrative-sanra.md ✅完整 |
+| 整合性综述 | integrative review | Whittemore & Knafl (2005) 五阶段 | — | SANRA 适配版（标注 adapted） | narrative-sanra.md（附节） |
+| SOTA 综述 | state-of-the-art review | 聚焦最新进展的全面检索 | — | SANRA 适配版（标注 adapted） | narrative-sanra.md（附节） |
+| 批判性综述 | critical review | Grant & Booth：概念创新导向 | — | 无形式化工具→定性评价 | other-types.md 轻量 |
+| 映射综述 | mapping review / systematic map | 时间/范围约束下成图 | — | 无形式化工具→PRISMA 流程图适配 | other-types.md 轻量 |
+| 系统检索叙述综述 | systematic search and review | 穷尽检索 + 批判评价 + 最佳证据综合 | — | SANRA 适配 / PRISMA 部分适配 | other-types.md 轻量 |
+
+## 类型路由决策树
+
+按序回答，命中即推荐（用户始终可以覆盖）：
+
+1. **目的 = 对现有 SR/MA 做再综述？** → umbrella
+2. **目的 = 合并效应量，且纳入研究统计同质？**
+   - 纳入 RCT/干预研究 → systematic + meta-analysis
+   - 纳入观察性研究 → MOOSE 路线；心理学领域 → MARS 路线
+   - 多干预比较网络 → NMA；诊断试验 → DTA
+3. **目的 = 回答高度聚焦的问题、需要质量评价与偏倚控制？** → systematic（定量）/ QES（定性）/ mixed methods（两者兼有）
+4. **目的 = 绘制新领域研究地图、识别概念与空白、文献杂且散？** → scoping（团队小/时间紧 → rapid 变体）
+5. **目的 = 解释"什么机制在什么情境下对谁起作用"？** → realist；多个研究传统冲突 → meta-narrative
+6. **目的 = 深度理论综合、翻译概念间关系？** → meta-ethnography；批判与理论建构 → critical
+7. **目的 = 领域概览、梳理脉络、教学或学位论文背景？** → narrative / integrative / SOTA / mapping / systematic search and review（按检索穷尽度降序选）
+
+补充约束：时间 ≤6 个月 → rapid；单人 → 叙述类；期刊要求注册方案 → systematic/scoping 优先。
+
+## 多选产出模式
+
+用户可多选类型（如 `scoping + descriptive map`、`systematic + meta-analysis`）。执行规则：
+
+- 环节2 检索**只做一次**，全部类型共享 merged_dedup.csv
+- 各类型独立的筛选标准与提取表（可能有重叠子集，分别落盘）
+- 各类型独立产出 report + 对应清单审计
+- 最终 HTML 报告多页签呈现 + 多清单合并审计表
+- decision-log 中记录类型间共享与分叉点

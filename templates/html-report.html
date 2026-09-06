@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OmniReview 综述报告 — {研究主题}</title>
+<style>
+  :root {
+    --ink: #1f2430; --sub: #5a6472; --line: #e3e7ee; --bg: #f7f8fa;
+    --card: #ffffff; --accent: #2456d6; --accent-soft: #e8eefc;
+    --warn: #b45309; --warn-soft: #fef3e2; --ok: #0f766e; --ok-soft: #e6f5f3;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+         color: var(--ink); background: var(--bg); line-height: 1.7; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 64px; }
+  header.hero { background: var(--card); border: 1px solid var(--line);
+                border-radius: 14px; padding: 28px 32px; margin-bottom: 24px; }
+  .hero h1 { font-size: 24px; margin-bottom: 8px; }
+  .hero .meta { color: var(--sub); font-size: 13px; }
+  .hero .meta span { margin-right: 18px; }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+  .tabs button { border: 1px solid var(--line); background: var(--card); color: var(--sub);
+                 padding: 8px 16px; border-radius: 999px; cursor: pointer; font-size: 14px; }
+  .tabs button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .panel { display: none; background: var(--card); border: 1px solid var(--line);
+           border-radius: 14px; padding: 28px 32px; }
+  .panel.active { display: block; }
+  .panel h2 { font-size: 18px; margin: 22px 0 10px; padding-bottom: 6px;
+              border-bottom: 2px solid var(--accent-soft); }
+  .panel h2:first-child { margin-top: 0; }
+  .panel h3 { font-size: 15px; margin: 16px 0 8px; color: var(--accent); }
+  .panel p, .panel li { font-size: 14.5px; }
+  .panel ul, .panel ol { padding-left: 22px; margin: 8px 0; }
+  .kpi-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 14px 0; }
+  .kpi { flex: 1 1 150px; background: var(--accent-soft); border-radius: 10px;
+         padding: 14px 16px; text-align: center; }
+  .kpi b { display: block; font-size: 26px; color: var(--accent); }
+  .kpi span { font-size: 12.5px; color: var(--sub); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13.5px; }
+  th { background: var(--accent-soft); color: var(--ink); text-align: left; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; vertical-align: top; }
+  .tag { display: inline-block; font-size: 11.5px; border-radius: 999px; padding: 2px 10px; }
+  .tag.ok   { background: var(--ok-soft); color: var(--ok); }
+  .tag.part { background: var(--warn-soft); color: var(--warn); }
+  .tag.miss { background: #fde8e8; color: #b91c1c; }
+  .tag.na   { background: #eef0f3; color: var(--sub); }
+  .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12.5px;
+                  color: var(--sub); margin: 6px 0 14px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; }
+  footer { color: var(--sub); font-size: 12.5px; margin-top: 24px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>{研究主题} — {综述类型列表}</h1>
+  <div class="meta">
+    <span>生成：{date}</span>
+    <span>工作流：OmniReview</span>
+    <span>模式：{assisted / autonomous}</span>
+    <span>数据源：{OpenAlex · Semantic Scholar · Crossref · DeepXiv}</span>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><b>{n_total}</b><span>去重后文献总量</span></div>
+    <div class="kpi"><b>{n_included}</b><span>纳入文献</span></div>
+    <div class="kpi"><b>{n_pdfs}</b><span>获取全文</span></div>
+    <div class="kpi"><b>{audit_pct}%</b><span>审计 Reported 比例</span></div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="active" data-p="overview">总览</button>
+  <button data-p="report">{类型}报告</button>
+  <button data-p="map">证据地图</button>
+  <button data-p="audit">审计评分</button>
+  <button data-p="trace">追溯文件</button>
+</nav>
+
+<section class="panel active" id="overview">
+  <h2>项目速览</h2>
+  <p>{一句话研究问题}。本页整合 {类型列表} 的完整产出：报告全文、证据地图、报告规范审计与全部追溯文件索引。</p>
+  <h3>流程记录</h3>
+  <table>
+    <tr><th>环节</th><th>结果</th></tr>
+    <tr><td>研究问题</td><td>{最终问题}</td></tr>
+    <tr><td>检索</td><td>{各库命中数；检索式见 文献检索报告.md}</td></tr>
+    <tr><td>筛选</td><td>{n_total} → {n_fulltext} → {n_included}；排除原因分布</td></tr>
+    <tr><td>精读/下载</td><td>{Tier 2 覆盖情况；未获取清单 unavailable.csv}</td></tr>
+    <tr><td>审计</td><td>{各清单 Reported 比例；修复优先级条数}</td></tr>
+  </table>
+  {overview_extra}
+</section>
+
+<section class="panel" id="report">
+  <h2>{类型}报告全文</h2>
+  {report_body}
+  <!-- 将 report-{type}.md 的正文按 h2/h3 分节填入 -->
+</section>
+
+<section class="panel" id="map">
+  <h2>证据地图</h2>
+  <h3>文献分布（按年份）</h3>
+  <div class="chart-legend">
+    <span><i class="dot" style="background:#2456d6"></i>文献数</span>
+  </div>
+  <svg viewBox="0 0 680 220" width="100%" role="img" aria-label="年份分布图">
+    <!-- {year_bars} 用 C3 风格生成：<rect x=.. y=.. width=28 height=.. fill=#2456d6 rx=4/>，底部 <text> 年份 -->
+    {year_bars}
+  </svg>
+  <h3>主题 × 方法 证据地图</h3>
+  <table>
+    <tr><th>主题</th><th>实证-定量</th><th>实证-定性</th><th>混合/建模</th><th>理论/综述</th><th>合计</th></tr>
+    {map_rows}
+  </table>
+  <h3>描述性统计要点</h3>
+  <ul>{descriptive_points}</ul>
+</section>
+
+<section class="panel" id="audit">
+  <h2>报告规范审计</h2>
+  {audit_tables}
+  <!-- 每个清单一张表：<table><tr><th>条目</th><th>状态</th><th>证据/修复</th></tr>…，状态用 .tag.ok/.part/.miss/.na -->
+  <h3>修复优先级</h3>
+  <ol>{fix_priorities}</ol>
+</section>
+
+<section class="panel" id="trace">
+  <h2>追溯文件索引</h2>
+  <table>
+    <tr><th>文件</th><th>说明</th></tr>
+    <tr><td>文献检索报告.md</td><td>检索式全文留档（可复现）</td></tr>
+    <tr><td>_working/search/*.csv</td><td>各源原始检索结果（逐次落盘）</td></tr>
+    <tr><td>_working/merged/merged_dedup.csv</td><td>归并去重主表</td></tr>
+    <tr><td>_working/screening/*.csv</td><td>纳入/排除清单（含原因与置信度）</td></tr>
+    <tr><td>pdfs/ & unavailable.csv</td><td>全文 PDF 与未获取清单</td></tr>
+    <tr><td>_working/review-state.md / _working/decision-log.md</td><td>阶段机与决策日志（模式2 全程托管记录）</td></tr>
+  </table>
+  <h3>方法学披露</h3>
+  <p>{ai_disclosure：AI 参与范围、第二筛选人（或模式2 托管声明）、决策日志位置}</p>
+</section>
+
+<footer>Generated by OmniReview · 数据来源已留档可复现 · {date}</footer>
+</div>
+
+<script>
+document.querySelectorAll('.tabs button').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.tabs button').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active');});
+    b.classList.add('active');
+    document.getElementById(b.dataset.p).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
