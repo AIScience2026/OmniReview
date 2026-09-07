@@ -2,7 +2,7 @@
 name: omnireview
 display_name: OmniReview 全能综述工作台
 display_name_en: OmniReview All-Type Literature Review Workbench
-description: All-type literature review workbench with question refinement, multi-source search (OpenAlex/Semantic Scholar/Crossref/DeepXiv), tiered reading and download, review-type routing (16 types), and checklist-based auditing (PRISMA/JBI/ENTREQ/SANRA), in assisted or autonomous mode. 全类型学术综述工作台：当用户要做文献综述、系统综述、范围综述、伞状综述、元分析、定性证据综合、现实主义综述、叙述性综述，或要求打磨研究问题、多源检索文献、批量下载论文、按权威规范审计评分时使用。
+description: 全类型学术综述工作流技能。当用户要做文献综述（literature review）、系统综述（systematic review）、范围综述（scoping review）、伞状综述（umbrella review）、元分析框架、定性证据综合（QES）、现实主义综述（realist review）、叙述性综述（narrative review）等任意类型综述，或要求打磨研究问题、多源检索文献、批量下载论文、按 PRISMA/JBI/PRISMA-ScR/ENTREQ/SANRA 等权威规范产出并审计评分时使用。覆盖问题打磨→多源检索（OpenAlex/Semantic Scholar/Crossref/DeepXiv）→分层阅读与下载→类型路由→报告规范审计评分全流程，支持逐关确认与全自动托管两种模式。
 description_zh: 把你的 AI 变成一支综述团队：将粗略研究想法打磨成可证伪的问题，自动检索 OpenAlex、Semantic Scholar、Crossref、DeepXiv 四大学术库，逐篇筛选去重，覆盖系统综述、范围综述、元分析等 16 种综述类型，成稿后按 PRISMA/JBI/ENTREQ/SANRA 权威清单逐条审计评分。每个决策留档可溯，经得起审稿人追问。重要综述逐关确认，日常调研全自动托管。
 description_en: All-type literature review workbench with question refinement, multi-source search (OpenAlex/Semantic Scholar/Crossref/DeepXiv), tiered reading and download, review-type routing (16 types), and checklist-based auditing, in assisted or autonomous mode.
 category: research
@@ -70,7 +70,7 @@ L0 仍是本技能的正式流程，同样禁止跳过以下步骤（简但不�
 | 关卡 | 时机 | 确认内容 |
 | --- | --- | --- |
 | C1 | 问题打磨后 | 研究问题定稿 + 综述类型（单选或多选） |
-| C2 | 检索前 | 检索式、数据源、时间范围、纳入/排除标准 |
+| C2 | 检索前 | 检索式、数据源、时间范围、纳入/排除标准、**每库数量上限（`--limit`：穷尽型=0、叙述型=80~150）** |
 | C3 | AI 预筛后 | 复核"不确定"类 + 抽查高/低置信样本 |
 | C4 | 数据提取前 | 提取字段定义 + 预试验（前 5-10 篇）校准结果 |
 | C5 | 综合成稿前 | 主题聚类 / 证据地图 / 核心发现 |
@@ -91,12 +91,29 @@ L0 仍是本技能的正式流程，同样禁止跳过以下步骤（简但不�
 依次运行（脚本均零第三方依赖，用系统 Python 直接执行）：
 
 ```bash
-python scripts/search_openalex.py --query "..." --since 2015 --out _working/search/openalex_q1.csv
-python scripts/search_semanticscholar.py --query "..." --out _working/search/s2_q1.csv
-python scripts/search_crossref.py --query "..." --out _working/search/crossref_q1.csv
-python scripts/search_deepxiv.py --query "..." --since 2023 --out _working/search/deepxiv_q1.csv
+# 穷尽型综述（systematic/scoping/umbrella/QES/meta 等绝大多数类型）：--limit 0 = 取全部匹配
+python scripts/search_openalex.py --query "..." --since 2015 --limit 0 --out _working/search/openalex_q1.csv
+python scripts/search_semanticscholar.py --query "..." --limit 0 --out _working/search/s2_q1.csv
+python scripts/search_crossref.py --query "..." --limit 0 --out _working/search/crossref_q1.csv
+python scripts/search_deepxiv.py --query "..." --since 2023 --limit 0 --out _working/search/deepxiv_q1.csv
+
+# 选择性抽样型（仅叙述性综述 narrative）：推荐每库 80-150，例如 --limit 120
+python scripts/search_openalex.py --query "..." --since 2015 --limit 120 --out _working/search/openalex_q1.csv
+python scripts/search_semanticscholar.py --query "..." --limit 120 --out _working/search/s2_q1.csv
+python scripts/search_crossref.py --query "..." --limit 120 --out _working/search/crossref_q1.csv
+python scripts/search_deepxiv.py --query "..." --since 2023 --limit 120 --out _working/search/deepxiv_q1.csv
+
 python scripts/dedup_merge.py --inputs _working/search/*.csv --out _working/merged/merged_dedup.csv
 ```
+
+**每库上限 `--limit` 的取值规则（关键）**：
+- 四个脚本参数名现已统一为 `--limit`；`--limit 0`（默认值）表示取全部匹配记录，硬上限 `MAX_SAFE=10000` 仅防失控。
+- **穷尽型（绝大多数类型）用 `--limit 0`**：systematic / meta-analysis(全) / NMA / DTA / scoping / umbrella / QES / meta-ethnography / mixed methods / integrative / SOTA / mapping / systematic search and review。不设上限，取全部。
+- **选择性抽样型（仅叙述性综述）用具体值**：推荐每库 `--limit 80~150`，并在 `文献检索报告.md` 与 Methods 声明"选择性检索、非穷尽"。
+- **理论/时间抽样型**（realist / meta-narrative / critical / rapid）：默认 `--limit 0`，按 CMO 理论饱和或时间窗截断；rapid 须披露时间限制。
+- **跨库一致性**：同一项目多库须用相同上限策略（都 0 或都同一数值），否则合并去重后样本偏库。
+- 各脚本运行后打印 `[stats] source=... retrieved=N total_available=M capped=...`：**`total_available` 是数据库真实命中总数（取自 API 返回总量），须原样抄入 `文献检索报告.md`**（PRISMA 第 6/7 条证据）。若 `capped=true` 说明真实命中超 10000，需拆分检索式覆盖全量。
+- 详细类型→上限映射见 `references/type-registry.md` 的「检索数量策略」专节。
 
 统一 schema：`doi,title,authors,year,venue,type,cited_by,abstract,oa_url,source,query,retrieved_at`。要点：
 

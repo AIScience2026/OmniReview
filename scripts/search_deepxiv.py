@@ -27,6 +27,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+MAX_SAFE = 10000  # fetch-all 模式下单库硬上限，防止粗放 query 失控
 FIELDS = ["doi", "title", "authors", "year", "venue", "type", "cited_by",
           "abstract", "oa_url", "source", "query", "retrieved_at"]
 
@@ -63,7 +64,8 @@ def main():
     p.add_argument("--query", required=True)
     p.add_argument("--since", default=None, help="起始年份，如 2023")
     p.add_argument("--until", default=None, help="截止年份")
-    p.add_argument("--limit", type=int, default=100)
+    p.add_argument("--limit", type=int, default=0,
+                   help="每库最多返回条数；0=取全部匹配（硬上限 %d）" % MAX_SAFE)
     p.add_argument("--source", default="arxiv", help="检索源：arxiv（默认）或 pmc")
     p.add_argument("--out", required=True)
     args = p.parse_args()
@@ -83,7 +85,8 @@ def main():
         sys.exit(2)
 
     reader = Reader(token=token)
-    kwargs = {"size": min(args.limit, 100), "source": args.source}
+    eff_limit = MAX_SAFE if args.limit == 0 else args.limit
+    kwargs = {"size": min(eff_limit, 100), "source": args.source}
     if args.since:
         kwargs["date_from"] = f"{args.since}-01-01"
     if args.until:
@@ -97,6 +100,7 @@ def main():
 
     results = res.get("result", []) if isinstance(res, dict) else (res or [])
     rows = []
+    total_available = None  # DeepXiv 检索接口不直接返回命中总数，仅能报告实际取回数
     for item in results:
         arxiv_id = (item.get("arxiv_id") or item.get("id") or "").strip()
         pub = item.get("date") or item.get("publish_at") or item.get("published") or ""
@@ -124,7 +128,7 @@ def main():
         rows = [r for r in rows if r["year"] >= args.since]
     if args.until:
         rows = [r for r in rows if r["year"] <= args.until]
-    rows = rows[:args.limit]
+    rows = rows[:eff_limit]
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -132,6 +136,9 @@ def main():
         writer = csv.DictWriter(f, fieldnames=FIELDS)
         writer.writeheader()
         writer.writerows(rows)
+    capped = args.limit != 0
+    print(f"[stats] source=deepxiv query={args.query!r} retrieved={len(rows)} "
+          f"total_available={total_available} capped={str(capped).lower()}")
     print(f"[ok] DeepXiv 命中 {len(rows)} 条 -> {out}")
 
 

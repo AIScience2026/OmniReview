@@ -21,6 +21,7 @@ from datetime import datetime, timezone
 FIELDS = ["doi", "title", "authors", "year", "venue", "type", "cited_by",
           "abstract", "oa_url", "source", "query", "retrieved_at"]
 API = "https://api.openalex.org/works"
+MAX_SAFE = 10000  # fetch-all 模式下单库硬上限，防止粗放 query 失控
 
 
 def rebuild_abstract(inv_idx):
@@ -58,7 +59,8 @@ def main():
     p.add_argument("--query", required=True)
     p.add_argument("--since", default=None, help="起始年份，如 2015")
     p.add_argument("--until", default=None, help="截止年份")
-    p.add_argument("--limit", type=int, default=200, help="最多返回条数（每页100）")
+    p.add_argument("--limit", type=int, default=0,
+                   help="每库最多返回条数（每页100）；0=取全部匹配（硬上限 %d）" % MAX_SAFE)
     p.add_argument("--email", default="omnireview@example.com", help="polite pool 邮箱")
     p.add_argument("--out", required=True)
     global ARGS
@@ -70,9 +72,10 @@ def main():
     if ARGS.until:
         filters.append(f"to_publication_date:{ARGS.until}-12-31")
 
-    rows, cursor = [], "*"
-    while len(rows) < ARGS.limit:
-        params = {"search": ARGS.query, "per-page": min(100, ARGS.limit - len(rows)),
+    eff_limit = MAX_SAFE if ARGS.limit == 0 else ARGS.limit
+    rows, cursor, total_available = [], "*", None
+    while len(rows) < eff_limit:
+        params = {"search": ARGS.query, "per-page": min(100, eff_limit - len(rows)),
                   "cursor": cursor, "mailto": ARGS.email}
         if filters:
             params["filter"] = ",".join(filters)
@@ -80,6 +83,7 @@ def main():
         data = fetch(url)
         if not data or not data.get("results"):
             break
+        total_available = data.get("meta", {}).get("count")
         for w in data["results"]:
             oa = w.get("open_access") or {}
             rows.append({
@@ -106,7 +110,10 @@ def main():
         writer = csv.DictWriter(f, fieldnames=FIELDS)
         writer.writeheader()
         writer.writerows(rows)
-    print(f"[ok] OpenAlex 命中 {len(rows)} 条 -> {ARGS.out}")
+    capped = ARGS.limit != 0
+    print(f"[stats] source=openalex query={ARGS.query!r} retrieved={len(rows)} "
+          f"total_available={total_available} capped={str(capped).lower()}")
+    print(f"[ok] OpenAlex 命中 {len(rows)} 条（数据库真实命中 {total_available} 条）-> {ARGS.out}")
 
 
 if __name__ == "__main__":

@@ -18,6 +18,8 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
+MAX_SAFE = 10000  # fetch-all 模式下单库硬上限，防止粗放 query 失控
+
 FIELDS = ["doi", "title", "authors", "year", "venue", "type", "cited_by",
           "abstract", "oa_url", "source", "query", "retrieved_at"]
 API = "https://api.crossref.org/works"
@@ -54,22 +56,25 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--query", required=True)
     p.add_argument("--since", default=None)
-    p.add_argument("--rows", type=int, default=200)
+    p.add_argument("--limit", type=int, default=0,
+                   help="每库最多返回条数（每页100）；0=取全部匹配（硬上限 %d）" % MAX_SAFE)
     p.add_argument("--email", default="omnireview@example.com")
     p.add_argument("--out", required=True)
     global ARGS
     ARGS = p.parse_args()
 
-    rows = []
-    offset = 0
-    while offset < ARGS.rows:
-        params = {"query": ARGS.query, "rows": min(100, ARGS.rows - offset),
+    eff_limit = MAX_SAFE if ARGS.limit == 0 else ARGS.limit
+    rows, offset, total_available = [], 0, None
+    while offset < eff_limit:
+        params = {"query": ARGS.query, "rows": min(100, eff_limit - offset),
                   "offset": offset, "mailto": ARGS.email}
         if ARGS.since:
             params["filter"] = f"from-pub-date:{ARGS.since}-01-01"
         data = fetch(f"{API}?{urllib.parse.urlencode(params)}")
         if not data:
             break
+        if total_available is None:
+            total_available = (data.get("message") or {}).get("total-results")
         items = (data.get("message") or {}).get("items") or []
         if not items:
             break
@@ -104,7 +109,10 @@ def main():
         writer = csv.DictWriter(f, fieldnames=FIELDS)
         writer.writeheader()
         writer.writerows(rows)
-    print(f"[ok] Crossref 命中 {len(rows)} 条 -> {ARGS.out}")
+    capped = ARGS.limit != 0
+    print(f"[stats] source=crossref query={ARGS.query!r} retrieved={len(rows)} "
+          f"total_available={total_available} capped={str(capped).lower()}")
+    print(f"[ok] Crossref 命中 {len(rows)} 条（数据库真实命中 {total_available} 条）-> {ARGS.out}")
 
 
 if __name__ == "__main__":

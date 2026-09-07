@@ -20,6 +20,7 @@
 - 端点：`https://api.crossref.org/works?query={q}&rows=100&mailto={email}`
 - 摘要仅部分出版商提供（JATS XML，脚本做标签剥离）；subject/type 字段完整
 - 适合做 DOI 校验与元数据补全
+- **数量参数已统一为 `--limit`**（与另三库一致）；`--limit 0` = 取全部匹配，脚本内部 `rows` 分页至 `total-results` 或 `MAX_SAFE=10000` 上限，并打印 `total_available`
 
 ## 补充源：DeepXiv（智源研究院开源）
 - 安装（隔离 venv）：`pip install deepxiv-sdk`；CLI `deepxiv`，SDK `from deepxiv_sdk import Reader`

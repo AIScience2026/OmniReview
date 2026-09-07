@@ -21,6 +21,8 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
+MAX_SAFE = 10000  # fetch-all 模式下单库硬上限，防止粗放 query 失控
+
 FIELDS = ["doi", "title", "authors", "year", "venue", "type", "cited_by",
           "abstract", "oa_url", "source", "query", "retrieved_at"]
 API = "https://api.semanticscholar.org/graph/v1/paper/search"
@@ -79,21 +81,25 @@ def fetch(url, retries=3):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--query", required=True)
-    p.add_argument("--limit", type=int, default=100)
+    p.add_argument("--limit", type=int, default=0,
+                   help="每库最多返回条数（每页100）；0=取全部匹配（硬上限 %d）" % MAX_SAFE)
     p.add_argument("--year", default=None, help="如 2015- 或 2015-2025")
     p.add_argument("--out", required=True)
     args = p.parse_args()
     print(f"[info] Semantic Scholar API key: {'已加载' if API_KEY else '未配置（免费池模式，限流高发）'}")
 
-    rows, offset = [], 0
-    while len(rows) < args.limit:
-        params = {"query": args.query, "limit": min(100, args.limit - len(rows)),
+    eff_limit = MAX_SAFE if args.limit == 0 else args.limit
+    rows, offset, total_available = [], 0, None
+    while len(rows) < eff_limit:
+        params = {"query": args.query, "limit": min(100, eff_limit - len(rows)),
                   "offset": offset, "fields": REQ_FIELDS}
         if args.year:
             params["year"] = args.year
         data = fetch(f"{API}?{urllib.parse.urlencode(params)}")
         if not data or not data.get("data"):
             break
+        if total_available is None:
+            total_available = data.get("total")
         for w in data["data"]:
             ext = w.get("externalIds") or {}
             oa = w.get("openAccessPdf") or {}
@@ -122,7 +128,10 @@ def main():
         writer = csv.DictWriter(f, fieldnames=FIELDS)
         writer.writeheader()
         writer.writerows(rows)
-    print(f"[ok] Semantic Scholar 命中 {len(rows)} 条 -> {args.out}")
+    capped = args.limit != 0
+    print(f"[stats] source=semanticscholar query={args.query!r} retrieved={len(rows)} "
+          f"total_available={total_available} capped={str(capped).lower()}")
+    print(f"[ok] Semantic Scholar 命中 {len(rows)} 条（数据库真实命中 {total_available} 条）-> {args.out}")
 
 
 if __name__ == "__main__":
