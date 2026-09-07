@@ -6,7 +6,7 @@ description: 全类型学术综述工作流技能。当用户要做文献综述�
 description_zh: 把你的 AI 变成一支综述团队：将粗略研究想法打磨成可证伪的问题，自动检索 OpenAlex、Semantic Scholar、Crossref、DeepXiv 四大学术库，逐篇筛选去重，覆盖系统综述、范围综述、元分析等 16 种综述类型，成稿后按 PRISMA/JBI/ENTREQ/SANRA 权威清单逐条审计评分。每个决策留档可溯，经得起审稿人追问。重要综述逐关确认，日常调研全自动托管。
 description_en: All-type literature review workbench with question refinement, multi-source search (OpenAlex/Semantic Scholar/Crossref/DeepXiv), tiered reading and download, review-type routing (16 types), and checklist-based auditing, in assisted or autonomous mode.
 category: research
-version: 1.2.0
+version: 1.2.1
 author: boss
 agent_created: true
 ---
