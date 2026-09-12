@@ -6,7 +6,7 @@ description: 全类型学术综述工作流技能。当用户要做文献综述�
 description_zh: 把你的 AI 变成一支综述团队：将粗略研究想法打磨成可证伪的问题，自动检索 OpenAlex、Semantic Scholar、Crossref、DeepXiv 四大学术库，逐篇筛选去重，覆盖系统综述、范围综述、元分析等 16 种综述类型，成稿后按 PRISMA/JBI/ENTREQ/SANRA 权威清单逐条审计评分。每个决策留档可溯，经得起审稿人追问。重要综述逐关确认，日常调研全自动托管。
 description_en: All-type literature review workbench with question refinement, multi-source search (OpenAlex/Semantic Scholar/Crossref/DeepXiv), tiered reading and download, review-type routing (16 types), and checklist-based auditing, in assisted or autonomous mode.
 category: research
-version: 1.2.1
+version: 1.3.0
 author: boss
 agent_created: true
 ---
@@ -105,6 +105,40 @@ python scripts/search_deepxiv.py --query "..." --since 2023 --limit 120 --out _w
 
 python scripts/dedup_merge.py --inputs _working/search/*.csv --out _working/merged/merged_dedup.csv
 ```
+
+**OpenAlex 检索模式（关键，2026-09-12 新增）**：
+- `--query` 映射到 OpenAlex 的 `search` 参数，是**相关性全文本检索、多词为 OR 语义**。实测
+  `home service robot social interaction` 命中 **67,206** 条（OR 并集，不是 AND）。在此模式下
+  `--limit 0` 会立刻撞 10,000 硬上限，且结果大量不相关 —— **不要用它做综述的精确检索**。
+- 精确检索请改用 **`--terms "词组A|词组B"`**：脚本把每个词组转为一个 `title_and_abstract.search`
+  过滤器，同一 filter 键重复出现时 OpenAlex 按 **AND** 处理（实测：单键 `humanoid robot` 命中
+  30,421，追加 `interaction` 键后降为 6,678）。这是 systematic / scoping 等穷尽型综述的**推荐用法**。
+  跨库一致性不受影响 —— S2 脚本用 bulk 布尔语法（`+`=AND）、Crossref/DeepXiv 用各自的相关性检索。
+
+  ```bash
+  # 精确 AND（推荐）：主题分解 + 每主题取全部匹配
+  python scripts/search_openalex.py --terms "social navigation|robot" --since 2019 --limit 0 \
+      --out _working/search/openalex_snav.csv
+  # 高级：直接透传 filter（与 --since/--until 自动合并）
+  python scripts/search_openalex.py --filter "title_and_abstract.search:humanoid robot,type:article" \
+      --since 2020 --limit 0 --out _working/search/openalex_custom.csv
+  ```
+- 主题式检索易漏"具身智能系谱"里程碑（SayCan / OpenVLA / RT-1 / VoxPoser / ALOHA / ConceptGraphs /
+  NoMaD / Segment Anything 等）——   它们不含 HRI 关键词，须按名补检（JBI Step2 第三步）。
+
+**Crossref 的正确用法（2026-09-12 实测）**：
+- Crossref 是 **DOI 注册库**，`--query`/`query.bibliographic` 是**模糊相关性**匹配，实测单次可返回
+  **百万级**无意义命中，**不要用它做主题检索**。
+- 且其摘要由出版商自愿提交，**付费墙期刊常为 0%**（实测 IEEE RA-L / Elsevier RAS / IJHCS 摘要率 0%），
+  而同样这批刊在 OpenAlex 中摘要率 100%/20%/52% —— 即 **OpenAlex 已 ingest Crossref 元数据，
+  不存在"不用 Crossref 就丢高价期刊题摘"的问题**。
+- 因此 Crossref 的价值在 **按刊枚举（venue sweep）**：`--issn` 取某刊全部作品 + `--terms` 本地精确 AND。
+  这是 JBI Step2 第三步"补充检索"的推荐手段，可保证旗舰期刊不漏。
+  ```bash
+  python scripts/search_crossref.py --issn "2573-9522,1875-4791" --terms "robot|trust" \
+      --since 2019 --max-scan 6000 --out _working/search/crossref_journals.csv
+  ```
+- 常用 HRI/机器人期刊 ISSN 清单与实测对比见 `references/journal-sweep.md`。
 
 **每库上限 `--limit` 的取值规则（关键）**：
 - 四个脚本参数名现已统一为 `--limit`；`--limit 0`（默认值）表示取全部匹配记录，硬上限 `MAX_SAFE=10000` 仅防失控。

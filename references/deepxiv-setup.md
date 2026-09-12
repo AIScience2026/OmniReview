@@ -27,7 +27,7 @@ DeepXiv（智源研究院开源）是 omnireview 的补充检索源 + Tier 2 精
 ### 第 3 步：验证
 
 ```bash
-# 1. 确认 SDK 已装入隔离 venv（首次使用才需要；路径以你的 Python/venv 为准）
+# 1. 确认 SDK 已装入隔离 venv（首次使用才需要）
 python -m pip install deepxiv-sdk
 
 # 2. 跑一次真实检索验证
